@@ -41,7 +41,7 @@ export const AppearanceProvider = (props: AppearanceProviderProps) => {
   }
 
   return (
-    <AppearanceContext.Provider value={{ elements: elements(), styleElement }}>
+    <AppearanceContext.Provider value={{ elements: elements() }}>
       {props.children}
     </AppearanceContext.Provider>
   );
