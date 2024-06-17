@@ -11,7 +11,19 @@ function cssObjectToString(styles: CSSProperties): string {
     .join(" ");
 }
 
-function css(styleElement: HTMLStyleElement, styles: string) {
+function createClassFromCssString(styles: string) {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  const styleElement = document.getElementById(
+    "novu-css-in-js-appearance-styles"
+  ) as HTMLStyleElement;
+
+  if (!styleElement) {
+    return "";
+  }
+
   const index = styleElement.sheet?.cssRules.length ?? 0;
   const className = `nv-css-${index}`;
   const rule = `.${className} { ${styles} }`;

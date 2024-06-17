@@ -21,8 +21,8 @@ const InternalInbox = () => {
   const style = useStyle();
 
   return (
-    <div class="novu">
-      <button class={style("tw-bg-blue-500", "button")}>test</button>
+    <div class={style("novu", "root")}>
+      <button class={style("tw-bg-red-500", "button")}>test</button>
     </div>
   );
 };
