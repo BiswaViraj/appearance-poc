@@ -1,3 +1,4 @@
+import { createSignal, onMount } from "solid-js";
 import {
   AppearanceContextType,
   AppearanceProvider,
@@ -21,7 +22,7 @@ const InternalInbox = () => {
 
   return (
     <div class="novu">
-      <button class={style("tw-bg-red-500", "button")}>test</button>
+      <button class={style("tw-bg-blue-500", "button")}>test</button>
     </div>
   );
 };

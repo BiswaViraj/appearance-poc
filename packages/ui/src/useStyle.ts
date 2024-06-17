@@ -1,3 +1,4 @@
+import { createEffect, createSignal } from "solid-js";
 import { CSSProperties, Elements, useAppearance } from "./appearance-context";
 import { cn } from "./lib/utils/cn";
 
@@ -21,23 +22,30 @@ function css(styleElement: HTMLStyleElement, styles: string) {
 }
 
 export const useStyle = () => {
-  const appearance = useAppearance();
-  console.log("useStyle running", appearance);
+  const [appearance, setAppearance] = createSignal(useAppearance());
 
-  return (className: string, descriptor?: keyof Elements) => {
+  createEffect(() => {
+    console.log("useStyle running", appearance());
+  });
+
+  return (className: string, descriptor?: keyof Elements | undefined) => {
+    const descriptorKey = descriptor as keyof Elements;
+    const appearanceData = appearance();
     const appearanceClassname =
-      descriptor && typeof appearance.elements[descriptor] === "string"
-        ? (appearance.elements[descriptor] as string) || ""
+      descriptor && typeof appearanceData.elements[descriptorKey] === "string"
+        ? (appearanceData.elements[descriptor] as string) || ""
         : "";
+
     const appearanceCssInJs =
-      descriptor && typeof appearance.elements[descriptor] === "object"
-        ? (appearance.elements[descriptor] as CSSProperties) || {}
+      descriptor && typeof appearanceData.elements[descriptor] === "object"
+        ? (appearanceData.elements[descriptor] as CSSProperties) || {}
         : {};
+
     let cssInJsClassname = "";
 
-    if (appearance.styleElement) {
+    if (appearanceData.styleElement) {
       cssInJsClassname = css(
-        appearance.styleElement,
+        appearanceData.styleElement,
         cssObjectToString(appearanceCssInJs)
       );
     }

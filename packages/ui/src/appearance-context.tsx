@@ -1,4 +1,10 @@
-import { ParentProps, createContext, useContext } from "solid-js";
+import {
+  ParentProps,
+  createContext,
+  useContext,
+  createSignal,
+  createMemo,
+} from "solid-js";
 
 export type CSSProperties = {
   [key: string]: string | number;
@@ -25,17 +31,16 @@ type AppearanceProviderProps = ParentProps & {
 };
 
 export const AppearanceProvider = (props: AppearanceProviderProps) => {
-  let styleElement: HTMLStyleElement | null = null;
+  const [elements, setElements] = createSignal(props.elements || {});
 
+  let styleElement: HTMLStyleElement | null = null;
   if (typeof window !== "undefined") {
     styleElement = document.createElement("style");
     document.head.appendChild(styleElement);
   }
 
   return (
-    <AppearanceContext.Provider
-      value={{ elements: props.elements || {}, styleElement }}
-    >
+    <AppearanceContext.Provider value={{ elements: elements(), styleElement }}>
       {props.children}
     </AppearanceContext.Provider>
   );
@@ -46,5 +51,9 @@ export function useAppearance() {
   if (!context) {
     throw new Error("useAppearance must be used within an AppearanceProvider");
   }
-  return context;
+
+  // Using a reactive memo to ensure elements update reactively
+  const elements = createMemo(() => context.elements);
+
+  return { ...context, elements };
 }
